@@ -2,7 +2,6 @@ import logging
 import os
 from flask import Flask
 from flask_jwt_extended import JWTManager
-from dotenv import load_dotenv
 from api.utils.database import db
 from api.config.config import Config, TestingConfig, DevelopmentConfig
 from api.utils.responses import response_with
@@ -10,6 +9,7 @@ import api.utils.responses as resp
 from api.authors.routes import author_routes
 from api.books.routes import book_routes
 from api.users.routes import user_routes
+from api.utils.email import mail
 
 app = Flask(__name__)
 
@@ -47,11 +47,9 @@ def not_found(e):
     logging.error(e)
     return response_with(resp.SERVER_ERROR_404)
 
-load_dotenv()
-
 jwt = JWTManager(app)
-app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
-app.config["JWT_ALGORITHM"] = "HS256"
+
+mail.init_app(app)
 
 db.init_app(app)
 with app.app_context():

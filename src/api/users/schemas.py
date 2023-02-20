@@ -9,3 +9,4 @@ class UserSchema(Schema):
 
     id = fields.Number(dump_only=True)
     username = fields.String(required=True)
+    email = fields.String(required=True)
