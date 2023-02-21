@@ -39,26 +39,29 @@ def create_user():
         subject = 'Please Verify your email'
         send_email(new_user.email, subject, html)
         user_schema = UserSchema()
-        return response_with(resp.SUCCESS_201, {'user': user_schema.dump(new_user)})
+        return response_with(resp.SUCCESS_201, value={'user': user_schema.dump(new_user)})
     except Exception:
         return response_with(resp.INVALID_INPUT_422)
 
 @user_routes.route('/login', methods=['POST'])
 def authenticate_user():
-    data = request.get_json()
-    if data.get('email'):
-        auth = data['email']
-        user = User.find_by_email(auth)
-    elif data.get('username'):
-        auth = data['username']
-        user = User.find_by_username(auth)
-    if not user:
-        return response_with(resp.SERVER_ERROR_404)
-    if user and not user.isVerified:
-        return response_with(resp.BAD_REQUEST_400)
-    if User.verify_hash(data['password'], user.password):
-        access_token = create_access_token(identity=auth)
-        return response_with(resp.SUCCESS_201, value={'message': f'Logged in as {user.username}',
+    try:
+        data = request.get_json()
+        if data.get('email'):
+            auth = data['email']
+            user = User.find_by_email(auth)
+        elif data.get('username'):
+            auth = data['username']
+            user = User.find_by_username(auth)
+        if not user:
+            return response_with(resp.SERVER_ERROR_404)
+        if user and not user.isVerified:
+            return response_with(resp.BAD_REQUEST_400)
+        if User.verify_hash(data['password'], user.password):
+            access_token = create_access_token(identity=auth)
+            return response_with(resp.SUCCESS_201, value={'message': f'Logged in as {user.username}',
                                                           'access_token': access_token})
-    else:
-        return response_with(resp.UNAUTHORIZED_403)
+        else:
+            return response_with(resp.UNAUTHORIZED_403)
+    except Exception:
+        return response_with(resp.INVALID_INPUT_422)

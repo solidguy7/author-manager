@@ -1,7 +1,8 @@
 import logging
 import os
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 from api.utils.database import db
 from api.config.config import Config, TestingConfig, DevelopmentConfig
 from api.utils.responses import response_with
@@ -28,6 +29,10 @@ app.register_blueprint(author_routes, url_prefix='/api/authors')
 app.register_blueprint(book_routes, url_prefix='/api/books')
 app.register_blueprint(user_routes, url_prefix='/api/users')
 
+@app.route('/avatar/<filename>', methods=['GET'])
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 @app.after_request
 def add_header(response):
     return response
@@ -50,6 +55,7 @@ def not_found(e):
 jwt = JWTManager(app)
 
 mail.init_app(app)
+migrate = Migrate(app, db)
 
 db.init_app(app)
 with app.app_context():

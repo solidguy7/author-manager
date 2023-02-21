@@ -13,3 +13,4 @@ class AuthorSchema(Schema):
     last_name = fields.String(required=True)
     created = fields.String(dump_only=True)
     books = fields.Nested(BookSchema, many=True)
+    avatar = fields.String(dump_only=True)

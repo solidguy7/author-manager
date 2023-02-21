@@ -11,13 +11,13 @@ book_routes = Blueprint('book_routes', __name__)
 def get_book_list():
     fetched = Book.query.all()
     book_schema = BookSchema(many=True)
-    return response_with(resp.SUCCESS_200, {'books': book_schema.dump(fetched)})
+    return response_with(resp.SUCCESS_200, value={'books': book_schema.dump(fetched)})
 
 @book_routes.route('/<int:id>', methods=['GET'])
 def get_book_detail(id):
     fetched = Book.query.get(id)
     book_schema = BookSchema()
-    return response_with(resp.SUCCESS_200, {'book': book_schema.dump(fetched)})
+    return response_with(resp.SUCCESS_200, value={'book': book_schema.dump(fetched)})
 
 @book_routes.route('/', methods=['POST'])
 @jwt_required()
@@ -43,7 +43,7 @@ def update_book_detail(id):
     get_book.year = data['year']
     get_book.create()
     book_schema = BookSchema()
-    return response_with(resp.SUCCESS_200, {'book': book_schema.dump(get_book)})
+    return response_with(resp.SUCCESS_200, value={'book': book_schema.dump(get_book)})
 
 @book_routes.route('/<int:id>', methods=['PATCH'])
 @jwt_required()
@@ -56,7 +56,7 @@ def modify_book_detail(id):
         get_book.year = data['year']
     get_book.create()
     book_schema = BookSchema()
-    return response_with(resp.SUCCESS_200, {'book': book_schema.dump(get_book)})
+    return response_with(resp.SUCCESS_200, value={'book': book_schema.dump(get_book)})
 
 @book_routes.route('/<int:id>', methods=['DELETE'])
 @jwt_required()

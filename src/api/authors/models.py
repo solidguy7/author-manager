@@ -8,6 +8,7 @@ class Author(db.Model):
     last_name = db.Column(db.String(20))
     created = db.Column(db.DateTime, server_default=db.func.now())
     books = db.relationship('Book', backref='Author', cascade="all, delete-orphan")
+    avatar = db.Column(db.String(100), nullable=True)
 
     def __init__(self, first_name, last_name, books=[]):
         self.first_name = first_name
