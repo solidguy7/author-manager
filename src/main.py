@@ -1,8 +1,10 @@
 import logging
 import os
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, jsonify
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from flask_swagger import swagger
+from flask_swagger_ui import get_swaggerui_blueprint
 from api.utils.database import db
 from api.config.config import Config, TestingConfig, DevelopmentConfig
 from api.utils.responses import response_with
@@ -51,6 +53,17 @@ def server_error(e):
 def not_found(e):
     logging.error(e)
     return response_with(resp.SERVER_ERROR_404)
+
+@app.route("/api/spec")
+def spec():
+    swag = swagger(app, prefix='/api')
+    swag['info']['base'] = "http://localhost:5000"
+    swag['info']['version'] = "1.0"
+    swag['info']['title'] = "Flask Author DB"
+    return jsonify(swag)
+
+swaggerui_blueprint = get_swaggerui_blueprint('/api/docs', '/api/spec', config={'app_name': "Flask Author DB"})
+app.register_blueprint(swaggerui_blueprint)
 
 jwt = JWTManager(app)
 

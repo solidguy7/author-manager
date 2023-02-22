@@ -29,6 +29,66 @@ def get_author_detail(id):
 @author_routes.route('/', methods=['POST'])
 @jwt_required()
 def create_author():
+    '''
+    Create author endpoint
+    ---
+    parameters:
+      - in: body
+        name: body
+        schema:
+            id: Author
+            required:
+                - first_name
+                - last_name
+                - books
+            properties:
+                first_name:
+                    type: string
+                    description: First name of the author
+                    default: "John"
+                last_name:
+                    type: string
+                    description: Last name of the author
+                    default: "Doe"
+      - in: header
+        name: authorization
+        type: string
+        required: true
+    security:
+      - Bearer: []
+    responses:
+        200:
+            description: Author successfully created
+            schema:
+                id: AuthorCreated
+                properties:
+                    code:
+                        type: string
+                    message:
+                        type: string
+                    value:
+                        schema:
+                            id: AuthorFull
+                            properties:
+                                first_name:
+                                    type: string
+                                last_name:
+                                    type: string
+                                books:
+                                    type: array
+                                    items:
+                                        schema:
+                                            id: BookSchema
+        422:
+            description: Invalid input arguments
+            schema:
+                id: invalidInput
+                properties:
+                    code:
+                        type: string
+                    message:
+                        type: string
+    '''
     try:
         data = request.get_json()
         if data.get('books', None) is not None:
@@ -44,6 +104,59 @@ def create_author():
 @author_routes.route('/avatar/<int:author_id>', methods=['POST'])
 @jwt_required()
 def upsert_author_avatar(author_id):
+    '''
+     Upsert author avatar
+    ---
+    parameters:
+      - in: body
+        name: body
+        schema:
+            id: Author
+            required:
+                - avatar
+            properties:
+                avatar:
+                    type: file
+                    description: Image file
+      - name: author_id
+        in: path
+        description: ID of the author
+        required: true
+        schema:
+            type: integer
+    responses:
+        200:
+            description: Author avatar successfully upserted
+            schema:
+                id: AuthorCreated
+                properties:
+                    code:
+                        type: string
+                    message:
+                        type: string
+                    value:
+                        schema:
+                            id: AuthorFull
+                            properties:
+                                first_name:
+                                    type: string
+                                last_name:
+                                    type: string
+                                books:
+                                    type: array
+                                    items:
+                                        schema:
+                                            id: BookSchema
+        422:
+            description: Invalid input arguments
+            schema:
+                id: invalidInput
+                properties:
+                    code:
+                        type: string
+                    message:
+                        type: string
+    '''
     file = request.files['avatar']
     get_author = Author.query.get(author_id)
     if file and allowed_files(file.content_type):

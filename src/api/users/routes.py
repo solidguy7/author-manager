@@ -25,6 +25,49 @@ def verify_email(token):
 
 @user_routes.route('/', methods=['POST'])
 def create_user():
+    '''
+    Create user endpoint
+    ---
+    parameters:
+      - in: body
+        name: body
+        schema:
+            id: UserSignup
+            required:
+                - username
+                - password
+                - email
+            properties:
+                username:
+                    type: string
+                    description: Unique username of the user
+                    default: "Johndoe"
+                password:
+                    type: string
+                    description: Password of the user
+                    default: "somethingstrong"
+                email:
+                    type: string
+                    description: Email of the user
+                    default: "someemail@provider.com"
+    responses:
+        201:
+            description: User successfully created
+            schema:
+                id: UserSignUpSchema
+                properties:
+                    code:
+                        type: string
+        422:
+            description: Invalid input arguments
+            schema:
+                id: invalidInput
+                properties:
+                    code:
+                        type: string
+                    message:
+                        type: string
+    '''
     try:
         password = User.generate_hash(request.json['password'])
         email = request.json['email']
@@ -45,6 +88,56 @@ def create_user():
 
 @user_routes.route('/login', methods=['POST'])
 def authenticate_user():
+    '''
+    User Login
+    ---
+    parameters:
+      - in: body
+        name: body
+        schema:
+            id: UserLogin
+            required:
+                - password
+                - email
+            properties:
+                email:
+                    type: string
+                    description: email of the user
+                    default: "someemail@provider.com"
+                password:
+                    type: string
+                    description: Password of the user
+                    default: "somethingstrong"
+    responses:
+        200:
+            description: User successfully logged In
+            schema:
+                id: UserLoggedIn
+                properties:
+                    code:
+                        type: string
+                    message:
+                        type: string
+                    value:
+                        schema:
+                            id: UserToken
+                            properties:
+                                access_token:
+                                    type: string
+                                code:
+                                    type: string
+                                message:
+                                    type: string
+        401:
+            description: Invalid input arguments
+            schema:
+                id: invalidInput
+                properties:
+                    code:
+                        type: string
+                    message:
+                        type: string
+    '''
     try:
         data = request.get_json()
         if data.get('email'):
