@@ -9,7 +9,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@mysql:3306/db'
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
-    JWT_ALGORITHM = "HS256"
+    JWT_ALGORITHM = 'HS256'
     SECRET_KEY = os.getenv('SECRET_KEY')
     SECURITY_PASSWORD_SALT = os.getenv('SECURITY_PASSWORD_SALT')
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
@@ -29,3 +29,4 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_ECHO = False
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@mysql:3306/tests'

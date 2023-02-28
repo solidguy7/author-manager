@@ -24,10 +24,7 @@ def get_book_detail(id):
 def create_book():
     try:
         data = request.get_json()
-        if data.get('author_id', None) is not None:
-            new_book = Book(title=data['title'], year=data['year'], author_id=data['author_id'])
-        else:
-            new_book = Book(title=data['title'], year=data['year'])
+        new_book = Book(title=data['title'], year=data['year'], author_id=data['author_id'])
         new_book.create()
         book_schema = BookSchema()
         return response_with(resp.SUCCESS_201, value={'book': book_schema.dump(new_book)})

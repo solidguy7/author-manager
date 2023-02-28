@@ -157,15 +157,18 @@ def upsert_author_avatar(author_id):
                     message:
                         type: string
     '''
-    file = request.files['avatar']
-    get_author = Author.query.get(author_id)
-    if file and allowed_files(file.content_type):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(current_app.config['DOWNLOAD_FOLDER'], filename))
-    get_author.avatar = url_for('uploaded_file', filename=filename, _external=True)
-    get_author.create()
-    author_schema = AuthorSchema()
-    return response_with(resp.SUCCESS_200, value={'author': author_schema.dump(get_author)})
+    try:
+        file = request.files['avatar']
+        get_author = Author.query.get(author_id)
+        if file and allowed_files(file.content_type):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(current_app.config['DOWNLOAD_FOLDER'], filename))
+        get_author.avatar = url_for('uploaded_file', filename=filename, _external=True)
+        get_author.create()
+        author_schema = AuthorSchema()
+        return response_with(resp.SUCCESS_200, value={'author': author_schema.dump(get_author)})
+    except Exception:
+        return response_with(resp.INVALID_INPUT_422)
 
 @author_routes.route('/<int:id>', methods=['PUT'])
 @jwt_required()

@@ -16,6 +16,8 @@ def verify_email(token):
     except:
         return response_with(resp.SERVER_ERROR_404)
     user = User.find_by_email(email)
+    if user is None:
+        return response_with(resp.SERVER_ERROR_404)
     if user.isVerified:
         return response_with(resp.INVALID_INPUT_422)
     else:

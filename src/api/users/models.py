@@ -10,10 +10,11 @@ class User(db.Model):
     isVerified = db.Column(db.Boolean, nullable=False, default=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
-    def __init__(self, username, password, email):
+    def __init__(self, username, password, email, isVerified=False):
         self.username = username
         self.password = password
         self.email = email
+        self.isVerified = isVerified
 
     def create(self):
         db.session.add(self)
