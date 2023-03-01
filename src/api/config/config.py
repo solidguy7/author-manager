@@ -6,8 +6,8 @@ load_dotenv()
 class Config(object):
     DEBUG = False
     TESTING = False
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@mysql:3306/prod'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@mysql:3306/db'
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
     JWT_ALGORITHM = 'HS256'
     SECRET_KEY = os.getenv('SECRET_KEY')
@@ -25,6 +25,7 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_ECHO = False
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@mysql:3306/db'
 
 class TestingConfig(Config):
     TESTING = True

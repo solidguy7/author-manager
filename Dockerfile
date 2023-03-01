@@ -7,4 +7,4 @@ RUN pip install -U pip
 COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 COPY . /code/
-CMD ["python3", "src/main.py"]
+CMD ["gunicorn", "-w", "12", "--bind", "0.0.0.0:8000", "wsgi:app"]

@@ -1,27 +1,17 @@
 import logging
-import os
 from flask import Flask, send_from_directory, jsonify
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_swagger_ui import get_swaggerui_blueprint
 from api.utils.database import db
-from api.config.config import Config, TestingConfig, DevelopmentConfig
+from api.config.config import DevelopmentConfig
 from api.utils.responses import response_with
 import api.utils.responses as resp
 from api.authors.routes import author_routes
 from api.books.routes import book_routes
 from api.users.routes import user_routes
 from api.utils.email import mail
-
-if os.environ.get('WORK_ENV') == 'PROD':
-    app_config = Config
-
-elif os.environ.get('WORK_ENV') == 'TEST':
-    app_config = TestingConfig
-
-else:
-    app_config = DevelopmentConfig
 
 def create_app(config):
     app = Flask(__name__)
@@ -78,4 +68,4 @@ def create_app(config):
     return app
 
 if __name__ == '__main__':
-    create_app(app_config).run(host='0.0.0.0', port=8000, use_reloader=False)
+    create_app(DevelopmentConfig).run(host='0.0.0.0', port=8000, use_reloader=False)
