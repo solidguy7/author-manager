@@ -1,4 +1,7 @@
 import logging
+import sentry_sdk
+import flask_monitoringdashboard as dashboard
+from sentry_sdk.integrations.flask import FlaskIntegration
 from flask import Flask, send_from_directory, jsonify
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
@@ -14,7 +17,12 @@ from api.users.routes import user_routes
 from api.utils.email import mail
 
 def create_app(config):
+    sentry_sdk.init(dsn="https://40cb8865de3f47fcbddbdf0bd8b40314@o4504764516925440.ingest.sentry.io/4504764519874560",
+                    integrations=[FlaskIntegration()], traces_sample_rate=1.0)
+
     app = Flask(__name__)
+
+    dashboard.bind(app)
 
     app.config.from_object(config)
 
