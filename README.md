@@ -3,3 +3,5 @@ API allowing users with JWT Auth to create, read, update and delete authors, boo
 Test coverage
 
 Entirely ready for deploying
+
+Stack: Flask, MySQL, Unitest, Docker, Nginx, Gunicorn
