@@ -4,4 +4,4 @@ Test coverage
 
 Entirely ready for deploying
 
-Stack: Flask, MySQL, Unitest, Docker, Nginx, Gunicorn
+Stack: Flask, MySQL, Unitest, Docker, Docker-Compose, Nginx, Gunicorn
